@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Braulio García\Documents\Atmel Studio\7.0\Laboratorio-Practica3\Laboratorio-Practica3\practica3-1.asm Mon Feb 24 12:39:20 2020
+AVRASM ver. 2.2.7  C:\Users\Braulio García\Documents\Atmel Studio\7.0\Laboratorio-Practica4\Laboratorio-Practica4\practica4-1.asm Wed Feb 26 14:10:08 2020
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m328pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m328pdef.inc'
@@ -985,127 +985,146 @@ AVRASM ver. 2.2.7  C:\Users\Braulio García\Documents\Atmel Studio\7.0\Laboratori
                                  
                                  ; ***** END OF FILE ******************************************************
                                  
-                                 ; Laboratorio-Practica3.asm
+                                 ; Practica5.asm
                                  ;
-                                 ; Created: 13/02/2020 01:19:10 p. m.
-                                 ; Author : Braulio GarcÃ­a
+                                 ; Created: 25/02/2019 01:14:00 p. m.
+                                 ; Author : mygtg
                                  ;
-                                 //ConfiguraciÃ³n del sistema
-000000 e000                      	LDI r16, 0x00
-000001 9300 0027                 	STS $0027, r16
-000003 ef2f                      	LDI r18, 0xFF
-000004 9320 002a                 	STS $002A,r18
-                                 //MAIN
+                                 
+                                 
+                                 ; Replace with your application code
+000000 ef0f                      LDI R16, 0xFF
+000001 b90a                      OUT DDRD, R16
+000002 e000                      LDI R16, 0x00 ;Puerto C y numero de 4 bits
+000003 e040                      LDI R20, 0x00 ;Puerto B y numero de 5 bits, el menos significativo  es el push buton
+000004 b907                      OUT DDRC, R16
+000005 b944                      OUT DDRB, R20
+000006 e0b1                      LDI R27, $01
+000007 e5a5                      LDI R26, $55
+000008 e030                      LDI R19, 0x00
+000009 940c 000b                 JMP START
+                                 
                                  START:
-000006 9100 0026                 	LDS r16, $0026
-000008 9b84                      	SBIS 16,4
-000009 940c 0006                 		jmp START
-00000b 940c 000d                 	jmp Convierte; Mandamos llamar a la etiqueta con el switch-case improvisado
+00000b b146                      	IN R20, PINC
+00000c 9546                      	LSR R20
+00000d f020                      	BRCS METEDATO
+00000e 9546                      	LSR R20
+00000f f080                      	BRCS SACADATO
+000010 940c 000b                 	JMP START
                                  
-                                 ; Si el valor es igual al numero  buscado saltamos en cada caso
-                                 Convierte:		
-00000d 3100                      	CPI r16, 0x10
-00000e f101                      	BRBS 1, CONVIERTE0
-00000f 3101                      	CPI r16, 0x11
-000010 f109                      	BRBS 1, CONVIERTE1
-000011 3102                      	CPI r16, 0x12
-000012 f111                      	BRBS 1, CONVIERTE2
-000013 3103                      	CPI r16, 0x13
-000014 f119                      	BRBS 1, CONVIERTE3
-000015 3104                      	CPI r16, 0x14
-000016 f121                      	BRBS 1, CONVIERTE4
-000017 3105                      	CPI r16, 0x15
-000018 f129                      	BRBS 1, CONVIERTE5
-000019 3106                      	CPI r16, 0x16
-00001a f131                      	BRBS 1, CONVIERTE6
-00001b 3107                      	CPI r16, 0x17
-00001c f139                      	BRBS 1, CONVIERTE7
-00001d 3108                      	CPI r16, 0x18
-00001e f141                      	BRBS 1, CONVIERTE8
-00001f 3109                      	CPI r16, 0x19
-000020 f149                      	BRBS 1, CONVIERTE9
-000021 310a                      	CPI r16, 0x1A
-000022 f151                      	BRBS 1, CONVIERTE10
-000023 310b                      	CPI r16, 0x1B
-000024 f159                      	BRBS 1, CONVIERTE11
-000025 310c                      	CPI r16, 0x1C
-000026 f161                      	BRBS 1, CONVIERTE12
-000027 310d                      	CPI r16, 0x1D
-000028 f169                      	BRBS 1, CONVIERTE13
-000029 310e                      	CPI r16, 0x1E
-00002a f171                      	BRBS 1, CONVIERTE14
-00002b 310f                      	CPI r16, 0x1F
-00002c f179                      	BRBS 1, CONVIERTE15
-00002d 940c 0006                 	jmp START
+                                 METEDATO:
+000012 b146                      	IN R20, PINC
+000013 9546                      	LSR R20
+000014 f3e8                      	BRCS METEDATO
+000015 9533                      	INC R19
+000016 9546                      	LSR R20
+000017 b103                      	IN R16, PINB
+000018 0f00                      	LSL R16
+000019 0f00                      	LSL R16
+00001a 2b40                      	OR R20, R16
+00001b 934d                      	ST X+, R20
+00001c 940c 0063                 	JMP DELAY3
+00001e 940c 000b                 	JMP START
                                  
-                                 ;Asignamos el valor de salida mapeado para los 7 segmentos al registro 18 eso es en todas las etiquetas que empiecen con "CONVIERTE"
-                                 CONVIERTE0:
-00002f e72e                      	LDI r18, 0x7E
-000030 940c 005f                 	jmp Salida
+                                 SACADATO:
+000020 b146                      	IN R20, PINC
+000021 9546                      	LSR R20
+000022 9546                      	LSR R20
+000023 f3e0                      	BRCS SACADATO
+000024 3030                      	CPI R19, 0x00
+000025 f039                      	BREQ PARPADEA
+000026 915e                      	LD R21, -X 
+000027 b95b                      	OUT PORTD, R21
+000028 953a                      	DEC R19
+000029 940c 0063                 	JMP DELAY3
+00002b 940c 000b                 	JMP START
                                  
-                                 CONVIERTE1:
-000032 e320                      	LDI r18, 0x30
-000033 940c 005f                 	jmp Salida
+                                 PARPADEA:
+00002d b146                      	IN R20, PINC
+00002e 9546                      	LSR R20
+00002f f310                      	BRCS METEDATO
+000030 ef8f                      	LDI R24, 0xFF
+000031 ef9f                      	LDI R25, 0xFF
+000032 b99b                      	OUT PORTD, R25
+                                 DELAY1:
+000033 0000                      	NOP
+000034 0000                      	NOP
+000035 0000                      	NOP
+000036 0000                      	NOP
+000037 0000                      	NOP
+000038 0000                      	NOP
+000039 0000                      	NOP
+00003a 0000                      	NOP
+00003b 0000                      	NOP
+00003c 0000                      	NOP
+00003d 0000                      	NOP
+00003e 0000                      	NOP
+00003f 0000                      	NOP
+000040 0000                      	NOP
+000041 0000                      	NOP
+000042 0000                      	NOP
+000043 0000                      	NOP
+000044 0000                      	NOP
+000045 959a                      	DEC R25
+000046 f761                      	BRNE DELAY1
+000047 958a                      	DEC R24
+000048 f751                      	BRNE DELAY1
+000049 b99b                      	OUT PORTD, R25
+00004a ef8f                      	LDI R24, 0xFF
+00004b ef9f                      	LDI R25, 0xFF
+                                 DELAY2:
+00004c 0000                      	NOP
+00004d 0000                      	NOP
+00004e 0000                      	NOP
+00004f 0000                      	NOP
+000050 0000                      	NOP
+000051 0000                      	NOP
+000052 0000                      	NOP
+000053 0000                      	NOP
+000054 0000                      	NOP
+000055 0000                      	NOP
+000056 0000                      	NOP
+000057 0000                      	NOP
+000058 0000                      	NOP
+000059 0000                      	NOP
+00005a 0000                      	NOP
+00005b 0000                      	NOP
+00005c 0000                      	NOP
+00005d 959a                      	DEC R25
+00005e f769                      	BRNE DELAY2
+00005f 958a                      	DEC R24
+000060 f759                      	BRNE DELAY2
+000061 940c 002d                 	JMP PARPADEA
                                  
-                                 CONVIERTE2:
-000035 e62d                      	LDI r18, 0x6D
-000036 940c 005f                 	jmp Salida
+                                 DELAY3:
                                  
-                                 CONVIERTE3:
-000038 e729                      	LDI r18, 0x79
-000039 940c 005f                 	jmp Salida
+000063 ef9f                      	LDI R25, 0xFF
+                                 	RR1:
+000064 ef7f                      	LDI R23, 0xFF
+                                 	RR:
+000065 0000                      	NOP
+000066 0000                      	NOP
+000067 0000                      	NOP
+000068 0000                      	NOP
+000069 0000                      	NOP
+00006a 0000                      	NOP
+00006b 0000                      	NOP
+00006c 0000                      	NOP
+00006d 0000                      	NOP
+00006e 0000                      	NOP
+00006f 0000                      	NOP
+000070 0000                      	NOP
+000071 0000                      	NOP
+000072 0000                      	NOP
+000073 0000                      	NOP
+000074 0000                      	NOP
+000075 959a                      	DEC R25
+000076 f771                      	BRNE RR
+000077 958a                      	DEC R24
+000078 f759                      	BRNE RR1
                                  
-                                 CONVIERTE4:
-00003b e323                      	LDI r18, 0x33
-00003c 940c 005f                 	jmp Salida
+000079 940c 000b                 	JMP START
                                  
-                                 CONVIERTE5:
-00003e e52b                      	LDI r18, 0x5B
-00003f 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE6:
-000041 e12f                      	LDI r18, 0x1F
-000042 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE7:
-000044 e721                      	LDI r18, 0x71
-000045 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE8:
-000047 e72f                      	LDI r18, 0x7F
-000048 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE9:
-00004a e723                      	LDI r18, 0x73
-00004b 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE10:
-00004d e727                      	LDI r18, 0x77
-00004e 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE11:
-000050 e12f                      	LDI r18, 0x1F
-000051 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE12:
-000053 e42e                      	LDI r18, 0x4E
-000054 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE13:
-000056 e32d                      	LDI r18, 0x3D
-000057 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE14:
-000059 e42f                      	LDI r18, 0x4F
-00005a 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE15:
-00005c e427                      	LDI r18, 0x47
-00005d 940c 005f                 	jmp Salida
-                                 
-                                 ;Asignamos al portD lo que tenga en el registro 18 y volvemos al ciclo
-                                 Salida:
-00005f 9320 002b                 	STS $002B, r18
 
 
 RESOURCE USE INFORMATION
@@ -1123,39 +1142,39 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 "ATmega328P" register use summary:
-x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
+x  :   2 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  19 r17:   0 r18:  19 r19:   0 r20:   0 
-r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
+r13:   0 r14:   0 r15:   0 r16:   8 r17:   0 r18:   0 r19:   4 r20:  15 
+r21:   2 r22:   0 r23:   1 r24:   5 r25:   8 r26:   1 r27:   1 r28:   0 
 r29:   0 r30:   0 r31:   0 
-Registers used: 2 out of 35 (5.7%)
+Registers used: 10 out of 35 (28.6%)
 
 "ATmega328P" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
-andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :  16 
-brcc  :   0 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
+andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
+brcc  :   0 brcs  :   5 break :   0 breq  :   1 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   0 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
+brne  :   6 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :  16 cpse  :   0 dec   :   0 eor   :   0 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 jmp   :  20 
-ld    :   0 ldd   :   0 ldi   :  18 lds   :   1 lpm   :   0 lsl   :   0 
-lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   0 pop   :   0 
+cpi   :   1 cpse  :   0 dec   :   7 eor   :   0 fmul  :   0 fmuls :   0 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   5 inc   :   1 jmp   :   8 
+ld    :   1 ldd   :   0 ldi   :  12 lds   :   0 lpm   :   0 lsl   :   2 
+lsr   :   7 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
+neg   :   0 nop   :  51 or    :   1 ori   :   0 out   :   6 pop   :   0 
 push  :   0 rcall :   0 ret   :   0 reti  :   0 rjmp  :   0 rol   :   0 
-ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 sbis  :   1 
+ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
-sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   3 
+sez   :   0 sleep :   0 spm   :   0 st    :   1 std   :   0 sts   :   0 
 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 7 out of 113 (6.2%)
+Instructions used: 16 out of 113 (14.2%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0000c6    198      0    198   32768   0.6%
+[.cseg] 0x000000 0x0000f6    246      0    246   32768   0.8%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

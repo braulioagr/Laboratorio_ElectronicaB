@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Braulio García\Documents\Atmel Studio\7.0\Laboratorio-Practica3\Laboratorio-Practica3\practica3-1.asm Mon Feb 24 12:39:20 2020
+AVRASM ver. 2.2.7  C:\Users\Braulio García\Documents\Atmel Studio\7.0\Laboratorio-Practica5\Laboratorio-Practica5\main.asm Wed Mar 04 14:16:34 2020
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m328pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m328pdef.inc'
@@ -985,127 +985,203 @@ AVRASM ver. 2.2.7  C:\Users\Braulio García\Documents\Atmel Studio\7.0\Laboratori
                                  
                                  ; ***** END OF FILE ******************************************************
                                  
-                                 ; Laboratorio-Practica3.asm
+                                 ; Practica 6_2.asm
                                  ;
-                                 ; Created: 13/02/2020 01:19:10 p. m.
-                                 ; Author : Braulio GarcÃ­a
+                                 ; Created: 06/03/2019 11:24:23 a. m.
+                                 ; Author : mygtg
                                  ;
-                                 //ConfiguraciÃ³n del sistema
-000000 e000                      	LDI r16, 0x00
-000001 9300 0027                 	STS $0027, r16
-000003 ef2f                      	LDI r18, 0xFF
-000004 9320 002a                 	STS $002A,r18
-                                 //MAIN
-                                 START:
-000006 9100 0026                 	LDS r16, $0026
-000008 9b84                      	SBIS 16,4
-000009 940c 0006                 		jmp START
-00000b 940c 000d                 	jmp Convierte; Mandamos llamar a la etiqueta con el switch-case improvisado
                                  
-                                 ; Si el valor es igual al numero  buscado saltamos en cada caso
-                                 Convierte:		
-00000d 3100                      	CPI r16, 0x10
-00000e f101                      	BRBS 1, CONVIERTE0
-00000f 3101                      	CPI r16, 0x11
-000010 f109                      	BRBS 1, CONVIERTE1
-000011 3102                      	CPI r16, 0x12
-000012 f111                      	BRBS 1, CONVIERTE2
-000013 3103                      	CPI r16, 0x13
-000014 f119                      	BRBS 1, CONVIERTE3
-000015 3104                      	CPI r16, 0x14
-000016 f121                      	BRBS 1, CONVIERTE4
-000017 3105                      	CPI r16, 0x15
-000018 f129                      	BRBS 1, CONVIERTE5
-000019 3106                      	CPI r16, 0x16
-00001a f131                      	BRBS 1, CONVIERTE6
-00001b 3107                      	CPI r16, 0x17
-00001c f139                      	BRBS 1, CONVIERTE7
-00001d 3108                      	CPI r16, 0x18
-00001e f141                      	BRBS 1, CONVIERTE8
-00001f 3109                      	CPI r16, 0x19
-000020 f149                      	BRBS 1, CONVIERTE9
-000021 310a                      	CPI r16, 0x1A
-000022 f151                      	BRBS 1, CONVIERTE10
-000023 310b                      	CPI r16, 0x1B
-000024 f159                      	BRBS 1, CONVIERTE11
-000025 310c                      	CPI r16, 0x1C
-000026 f161                      	BRBS 1, CONVIERTE12
-000027 310d                      	CPI r16, 0x1D
-000028 f169                      	BRBS 1, CONVIERTE13
-000029 310e                      	CPI r16, 0x1E
-00002a f171                      	BRBS 1, CONVIERTE14
-00002b 310f                      	CPI r16, 0x1F
-00002c f179                      	BRBS 1, CONVIERTE15
-00002d 940c 0006                 	jmp START
                                  
-                                 ;Asignamos el valor de salida mapeado para los 7 segmentos al registro 18 eso es en todas las etiquetas que empiecen con "CONVIERTE"
-                                 CONVIERTE0:
-00002f e72e                      	LDI r18, 0x7E
-000030 940c 005f                 	jmp Salida
+                                 ; Replace with your application code
+000000 ef0f                      LDI R16, 0xFF
+000001 b90a                      OUT DDRD, R16
+000002 b904                      OUT DDRB, R16
+000003 e000                      LDI R16, 0x00
+000004 b907                      OUT DDRC, R16
+000005 e011                      LDI R17, 0x01
+000006 e020                      LDI R18, 0x00
+000007 ef4f                      LDI R20, 0xFF
+000008 e030                      LDI R19, 0x00;Para verificar si la salida sera negada o normal
+000009 940c 000b                 JMP STARTDL
                                  
-                                 CONVIERTE1:
-000032 e320                      	LDI r18, 0x30
-000033 940c 005f                 	jmp Salida
+                                 STARTDL:
+00000b b106                      	IN R16, PINC
+00000c 3000                      	CPI R16, 0x00
+00000d f079                      	BREQ NEXT1
+00000e 9506                      	LSR R16;;Comprueba si el boton1 (bit0) esta presionado
+00000f f410                      	BRCC NOBOTON1
+000010 940e 008f                 	CALL BOTONAZO;Si el bit0 esta en 1 se ejecuta este call
+                                 NOBOTON1: 
+000012 9506                      	LSR R16;Coprueba si el boton 2(bit 1) esta presionado
+000013 f410                      	BRCC NOBOTON2
+000014 940c 0098                 	JMP BOTONB;Si el bit1 esta en 1 se ejecuta REinicia la secuencia
+                                 NOBOTON2:
+000016 9506                      	LSR R16;Comprueba si el boton3 (bit2) esta presionado
+000017 f408                      	BRCC NOBOTON3
+000018 9520                      	COM R18; si esta en 1s se negara a salida de los puertos
+                                 NOBOTON3:
+000019 9506                      	LSR R16;Comprueba si el boton4 (bit3) esta presionado
+00001a f410                      	BRCC NEXT1
+00001b 940c 00a8                 	JMP BOTOND;Finaliza el programa
                                  
-                                 CONVIERTE2:
-000035 e62d                      	LDI r18, 0x6D
-000036 940c 005f                 	jmp Salida
+                                 NEXT1:;Muestra la salida normal en el puerto D
+00001d 3020                      	CPI R18, 0x00
+00001e f009                      	BREQ NEGAR1
+00001f 9510                      	COM R17
+                                 NEGAR1:	
+000020 b925                      	OUT PORTB, R18
+000021 b91b                          OUT PORTD, R17
+000022 3020                      	CPI R18, 0x00
+000023 f009                      	BREQ NEGAR2
+000024 9510                      	COM R17
+                                 NEGAR2:
+000025 940e 009d                 	CALL DELAY
+000027 0f11                      	LSL R17
+000028 f710                      	BRSH STARTDL
+000029 e011                      	LDI R17, 0x01
+00002a b92b                      	OUT PORTD, R18
+00002b 940c 002f                 	JMP STARTBL
                                  
-                                 CONVIERTE3:
-000038 e729                      	LDI r18, 0x79
-000039 940c 005f                 	jmp Salida
+                                 	; Primera ejecucino de salida en el pruero D
+                                 	ROLES:
+00002d 9516                      	LSR R17
+00002e 9516                      	LSR R17
+                                 STARTBL:
+00002f b106                      	IN R16, PINC
+000030 3000                      	CPI R16, 0x00
+000031 f079                      	BREQ NEXT2
+000032 9506                      	LSR R16;;Comprueba si el boton1 (bit0) esta presionado
+000033 f410                      	BRCC NOBOTON11
+000034 940e 008f                 	CALL BOTONAZO;Si el bit0 esta en 1 se ejecuta este call
+                                 NOBOTON11: 
+000036 9506                      	LSR R16;Coprueba si el boton 2(bit 1) esta presionado
+000037 f410                      	BRCC NOBOTON22
+000038 940c 0098                 	JMP BOTONB;Si el bit1 esta en 1 se ejecuta este call
+                                 NOBOTON22:
+00003a 9506                      	LSR R16;Comprueba si el boton3 (bit2) esta presionado
+00003b f408                      	BRCC NOBOTON33
+00003c 9520                      	COM R18; si esta en 1s se negara a salida de los puertos
+                                 NOBOTON33:
+00003d 9506                      	LSR R16;Comprueba si el boton4 (bit3) esta presionado
+00003e f410                      	BRCC NEXT2
+00003f 940c 00a8                 	JMP BOTOND;Finaliza el programa
+                                 NEXT2:
+000041 fd20                      	SBRC R18, 0;Salta si el bit es 0, si es 1 la sig instruccion negara la salida mostrada en R17
+000042 9510                      	COM R17
+000043 b92b                      	OUT PORTD, R18
+000044 b915                      	OUT PORTB, R17
+000045 fd20                      	SBRC R18, 0
+000046 9510                      	COM R17
+000047 940e 009d                 	CALL DELAY
+000049 0f11                      	LSL R17
+00004a 0f11                      	LSL R17
+00004b 0f11                      	LSL R17
+00004c f700                      	BRSH ROLES ;
+00004d 9516                      	LSR R17
+00004e 9516                      	LSR R17
+00004f b925                      	OUT PORTB, R18
+000050 e210                      	LDI R17, 0x20
+                                 STARTBR:
+000051 b106                      	IN R16, PINC
+000052 3000                      	CPI R16, 0x00
+000053 f079                      	BREQ NEXT3
+000054 9506                      	LSR R16;;Comprueba si el boton1 (bit0) esta presionado
+000055 f410                      	BRCC NOBOTON111
+000056 940e 008f                 	CALL BOTONAZO;Si el bit0 esta en 1 se ejecuta este call
+                                 NOBOTON111: 
+000058 9506                      	LSR R16;Coprueba si el boton 2(bit 1) esta presionado
+000059 f410                      	BRCC NOBOTON222
+00005a 940c 0098                 	JMP BOTONB;Si el bit1 esta en 1 se ejecuta este call
+                                 NOBOTON222:
+00005c 9506                      	LSR R16;Comprueba si el boton3 (bit2) esta presionado
+00005d f408                      	BRCC NOBOTON333
+00005e 9520                      	COM R18; si esta en 1s se negara a salida de los puertos
+                                 NOBOTON333:
+00005f 9506                      	LSR R16;Comprueba si el boton4 (bit3) esta presionado
+000060 f410                      	BRCC NEXT3
+000061 940c 00a8                 	JMP BOTOND;Finaliza el programa
+                                 NEXT3:
+000063 fd20                      	SBRC R18, 0
+000064 9510                      	COM R17
+000065 b92b                      	OUT PORTD, R18
+000066 b915                      	OUT PORTB, R17
+000067 fd20                      	SBRC R18, 0
+000068 9510                      	COM R17
+000069 940e 009d                 	CALL DELAY
+00006b 9516                      	LSR R17
+00006c f720                      	BRSH STARTBR
+00006d b925                      	OUT PORTB, R18
+00006e e810                      	LDI R17, 0x80
+                                 STARTDR:
+00006f b106                      	IN R16, PINC
+000070 3000                      	CPI R16, 0x00
+000071 f079                      	BREQ NEXT4
+000072 9506                      	LSR R16;;Comprueba si el boton1 (bit0) esta presionado
+000073 f410                      	BRCC NOBOTON1111
+000074 940e 008f                 	CALL BOTONAZO;Si el bit0 esta en 1 se ejecuta este call
+                                 NOBOTON1111: 
+000076 9506                      	LSR R16;Coprueba si el boton 2(bit 1) esta presionado
+000077 f410                      	BRCC NOBOTON2222
+000078 940c 0098                 	JMP BOTONB;Si el bit1 esta en 1 se ejecuta este call
+                                 NOBOTON2222:
+00007a 9506                      	LSR R16;Comprueba si el boton3 (bit2) esta presionado
+00007b f408                      	BRCC NOBOTON3333
+00007c 9520                      	COM R18; si esta en 1s se negara a salida de los puertos
+                                 NOBOTON3333:
+00007d 9506                      	LSR R16;Comprueba si el boton4 (bit3) esta presionado
+00007e f410                      	BRCC NEXT4
+00007f 940c 00a8                 	JMP BOTOND;Finaliza el programa
+                                 NEXT4:
+000081 fd20                      	SBRC R18, 0
+000082 9510                      	COM R17
+000083 b925                      	OUT PORTB, R18
+000084 b91b                          OUT PORTD, R17
+000085 fd20                      	SBRC R18, 0
+000086 9510                      	COM R17
+000087 940e 009d                 	CALL DELAY
+000089 9516                      	LSR R17
+00008a f720                      	BRSH STARTDR
+00008b e011                      	LDI R17, 0x01
+00008c b92b                      	OUT PORTD, R18
+00008d 940c 000b                 	JMP STARTDL
+                                 	
+                                 BOTONAZO:
+00008f b106                      	IN R16, PINC
+000090 9506                      	LSR R16
+000091 f3e8                      	BRCS BOTONAZO
+000092 940e 009d                 	CALL DELAY
+                                 BOTONA:
+000094 b106                      	IN R16, PINC
+000095 9506                      	LSR R16
+000096 f7e8                      	BRCC BOTONA
+000097 9508                      	RET
                                  
-                                 CONVIERTE4:
-00003b e323                      	LDI r18, 0x33
-00003c 940c 005f                 	jmp Salida
+                                 BOTONB:
+000098 b93b                      	OUT PORTD, R19
+000099 b935                      	OUT PORTB, R19
+00009a e011                      	LDI R17, 0x01
+00009b 940c 000b                 	JMP STARTDL
                                  
-                                 CONVIERTE5:
-00003e e52b                      	LDI r18, 0x5B
-00003f 940c 005f                 	jmp Salida
+                                 DELAY:
+00009d e265                      	LDI R22, 0x25
+                                 RR2:
+00009e ef4f                      	LDI R20, 0xFF
+                                 RR1:
+00009f ef5f                      	LDI R21, 0xFF
+                                 RR:
+0000a0 0000                      	NOP
+0000a1 955a                      	DEC R21
+0000a2 f7e9                      	BRNE RR
+0000a3 954a                      	DEC R20
+0000a4 f7d1                      	BRNE RR1
+0000a5 956a                      	DEC R22
+0000a6 f7b9                      	BRNE RR2
+0000a7 9508                      	RET
                                  
-                                 CONVIERTE6:
-000041 e12f                      	LDI r18, 0x1F
-000042 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE7:
-000044 e721                      	LDI r18, 0x71
-000045 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE8:
-000047 e72f                      	LDI r18, 0x7F
-000048 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE9:
-00004a e723                      	LDI r18, 0x73
-00004b 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE10:
-00004d e727                      	LDI r18, 0x77
-00004e 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE11:
-000050 e12f                      	LDI r18, 0x1F
-000051 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE12:
-000053 e42e                      	LDI r18, 0x4E
-000054 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE13:
-000056 e32d                      	LDI r18, 0x3D
-000057 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE14:
-000059 e42f                      	LDI r18, 0x4F
-00005a 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE15:
-00005c e427                      	LDI r18, 0x47
-00005d 940c 005f                 	jmp Salida
-                                 
-                                 ;Asignamos al portD lo que tenga en el registro 18 y volvemos al ciclo
-                                 Salida:
-00005f 9320 002b                 	STS $002B, r18
+                                 BOTOND:
+0000a8 e000                      	LDI R16, 0x00
+0000a9 b905                      	OUT PORTB, R16
+0000aa b90b                      	OUT PORTD, R16
 
 
 RESOURCE USE INFORMATION
@@ -1125,37 +1201,37 @@ counted separately from r26..r31 here.
 "ATmega328P" register use summary:
 x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  19 r17:   0 r18:  19 r19:   0 r20:   0 
-r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
+r13:   0 r14:   0 r15:   0 r16:  36 r17:  28 r18:  21 r19:   3 r20:   3 
+r21:   2 r22:   2 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:   0 r31:   0 
-Registers used: 2 out of 35 (5.7%)
+Registers used: 7 out of 35 (20.0%)
 
 "ATmega328P" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
-andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :  16 
-brcc  :   0 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
+andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
+brcc  :  17 brcs  :   1 break :   0 breq  :   6 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   0 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
+brne  :   3 brpl  :   0 brsh  :   4 brtc  :   0 brts  :   0 brvc  :   0 
+brvs  :   0 bset  :   0 bst   :   0 call  :   9 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
-clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :  16 cpse  :   0 dec   :   0 eor   :   0 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 jmp   :  20 
-ld    :   0 ldd   :   0 ldi   :  18 lds   :   1 lpm   :   0 lsl   :   0 
-lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   0 pop   :   0 
-push  :   0 rcall :   0 ret   :   0 reti  :   0 rjmp  :   0 rol   :   0 
-ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 sbis  :   1 
-sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
+clt   :   0 clv   :   0 clz   :   0 com   :  12 cp    :   0 cpc   :   0 
+cpi   :   6 cpse  :   0 dec   :   3 eor   :   0 fmul  :   0 fmuls :   0 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   6 inc   :   0 jmp   :  12 
+ld    :   0 ldd   :   0 ldi   :  15 lds   :   0 lpm   :   0 lsl   :   4 
+lsr   :  24 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
+neg   :   0 nop   :   1 or    :   0 ori   :   0 out   :  19 pop   :   0 
+push  :   0 rcall :   0 ret   :   2 reti  :   0 rjmp  :   1 rol   :   0 
+ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 sbis  :   0 
+sbiw  :   0 sbr   :   0 sbrc  :   6 sbrs  :   0 sec   :   0 seh   :   0 
 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
-sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   3 
+sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   0 
 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 7 out of 113 (6.2%)
+Instructions used: 19 out of 113 (16.8%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0000c6    198      0    198   32768   0.6%
+[.cseg] 0x000000 0x000158    344      0    344   32768   1.0%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

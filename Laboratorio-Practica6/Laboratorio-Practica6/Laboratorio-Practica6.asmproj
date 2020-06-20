@@ -11,11 +11,11 @@
     <OutputFileExtension>.obj</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
     <Language>ASSEMBLY</Language>
-    <AssemblyName>Laboratorio-Practica3</AssemblyName>
-    <Name>Laboratorio-Practica3</Name>
-    <RootNamespace>Laboratorio-Practica3</RootNamespace>
+    <AssemblyName>Laboratorio-Practica6</AssemblyName>
+    <Name>Laboratorio-Practica6</Name>
+    <RootNamespace>Laboratorio-Practica6</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
-    <EntryFile>$(MSBuildProjectDirectory)\practica3-1.asm</EntryFile>
+    <EntryFile>$(MSBuildProjectDirectory)\Practica 6-2.asm</EntryFile>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
     <CacheFlash>true</CacheFlash>
@@ -80,13 +80,10 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="practica3-1.asm">
+    <Compile Include="Practica 6-2.asm">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="practica3-2.asm">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Practica3-3.asm">
+    <Compile Include="Practica 6-1.asm">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

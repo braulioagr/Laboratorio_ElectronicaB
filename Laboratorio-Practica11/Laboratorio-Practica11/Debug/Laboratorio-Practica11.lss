@@ -1,10 +1,10 @@
 
-AVRASM ver. 2.2.7  C:\Users\Braulio García\Documents\Atmel Studio\7.0\Laboratorio-Practica3\Laboratorio-Practica3\practica3-1.asm Mon Feb 24 12:39:20 2020
+AVRASM ver. 2.2.7  C:\Users\Braulio García\Documents\Atmel Studio\7.0\Laboratorio-Practica11\Laboratorio-Practica11\practica11-2.asm Sun May 31 17:06:01 2020
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m328pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m328pdef.inc'
                                  
-                                 ;
+                                 /*
                                  
                                  ;***** Created: 2011-02-09 12:03 ******* Source: ATmega328P.xml **********
                                  ;*************************************************************************
@@ -985,127 +985,154 @@ AVRASM ver. 2.2.7  C:\Users\Braulio García\Documents\Atmel Studio\7.0\Laboratori
                                  
                                  ; ***** END OF FILE ******************************************************
                                  
-                                 ; Laboratorio-Practica3.asm
-                                 ;
-                                 ; Created: 13/02/2020 01:19:10 p. m.
-                                 ; Author : Braulio GarcÃ­a
-                                 ;
-                                 //ConfiguraciÃ³n del sistema
-000000 e000                      	LDI r16, 0x00
-000001 9300 0027                 	STS $0027, r16
-000003 ef2f                      	LDI r18, 0xFF
-000004 9320 002a                 	STS $002A,r18
-                                 //MAIN
-                                 START:
-000006 9100 0026                 	LDS r16, $0026
-000008 9b84                      	SBIS 16,4
-000009 940c 0006                 		jmp START
-00000b 940c 000d                 	jmp Convierte; Mandamos llamar a la etiqueta con el switch-case improvisado
+                                  * practica11_2.asm
+                                  *
+                                  *  Created: 30/05/2020 02:30:16 p. m.
+                                  *   Author: Braulio Garc?a
+                                  */ 
+                                  ;
+                                 .def config = r16
+                                 .def puertoB = r17
+                                 .def puertoC = r18
+                                 .def puertoD = r19
+                                 .org 0x00
+000000 940c 0100                 jmp reset
+                                 .org 0x0024
+000024 940c 0700                 jmp USART_RX
+                                 .org 0x100
+                                 reset:
+                                 	/*USART*/
+000100 e900                      	ldi config,0b1001_0000
+000101 9300 00c1                 	sts UCSR0B,config
+000103 e006                      	ldi config,0b00_00_0110
+000104 9300 00c2                 	sts UCSR0C,config
+                                 	/**Baudios**/
+000106 e607                      	ldi config,0b0110_0111
+000107 9300 00c4                 	sts 0xC4,config
+000109 e000                      	ldi config,0b0000_0000
+00010a 9300 00c5                 	sts 0xC5,config
+                                 	/* I/O Ports*/
+00010c ef0f                      	ldi config, 0xFF
+00010d b904                      	out ddrb, config
+00010e b907                      	out ddrc, config
+00010f 2f30                      	mov puertoD,config
+000110 9478                          sei 
+000111 940c 0500                 	jmp main
+                                 	
+                                 .org 0x500
+                                 main:
+000500 940c 0500                     jmp main
+                                 	
+                                 	
+                                 delay:
+000502 e259                      	ldi  r21, 41
+000503 e966                      	ldi  r22, 150
+000504 e870                      	ldi  r23, 128
+                                 L1:
+000505 957a                      	dec  r23
+000506 f7f1                      	brne L1
+000507 956a                      	dec  r22
+000508 f7e1                      	brne L1
+000509 955a                      	dec  r21
+00050a f7d1                      	brne L1
+00050b 9508                      	ret
                                  
-                                 ; Si el valor es igual al numero  buscado saltamos en cada caso
-                                 Convierte:		
-00000d 3100                      	CPI r16, 0x10
-00000e f101                      	BRBS 1, CONVIERTE0
-00000f 3101                      	CPI r16, 0x11
-000010 f109                      	BRBS 1, CONVIERTE1
-000011 3102                      	CPI r16, 0x12
-000012 f111                      	BRBS 1, CONVIERTE2
-000013 3103                      	CPI r16, 0x13
-000014 f119                      	BRBS 1, CONVIERTE3
-000015 3104                      	CPI r16, 0x14
-000016 f121                      	BRBS 1, CONVIERTE4
-000017 3105                      	CPI r16, 0x15
-000018 f129                      	BRBS 1, CONVIERTE5
-000019 3106                      	CPI r16, 0x16
-00001a f131                      	BRBS 1, CONVIERTE6
-00001b 3107                      	CPI r16, 0x17
-00001c f139                      	BRBS 1, CONVIERTE7
-00001d 3108                      	CPI r16, 0x18
-00001e f141                      	BRBS 1, CONVIERTE8
-00001f 3109                      	CPI r16, 0x19
-000020 f149                      	BRBS 1, CONVIERTE9
-000021 310a                      	CPI r16, 0x1A
-000022 f151                      	BRBS 1, CONVIERTE10
-000023 310b                      	CPI r16, 0x1B
-000024 f159                      	BRBS 1, CONVIERTE11
-000025 310c                      	CPI r16, 0x1C
-000026 f161                      	BRBS 1, CONVIERTE12
-000027 310d                      	CPI r16, 0x1D
-000028 f169                      	BRBS 1, CONVIERTE13
-000029 310e                      	CPI r16, 0x1E
-00002a f171                      	BRBS 1, CONVIERTE14
-00002b 310f                      	CPI r16, 0x1F
-00002c f179                      	BRBS 1, CONVIERTE15
-00002d 940c 0006                 	jmp START
+                                 .org 0x700
+                                 USART_RX:
+000700 9130 00c6                 	lds puertoD,0xC6
+000702 3330                          cpi puertoD,0b0011_0000//0
+000703 9100 005f                     lds config, 0x5F
+000705 9981                          sbic 16,1
+000706 e33f                              ldi puertoD, 0x3F
+                                 		
+000707 3331                          cpi puertoD,0b0011_0001//1
+000708 9100 005f                     lds config, 0x5F
+00070a 9981                          sbic 16,1
+00070b e836                              ldi puertoD, 0x86
+                                 		
+00070c 3332                          cpi puertoD,0b0011_0010//2
+00070d 9100 005f                     lds config, 0x5F
+00070f 9981                          sbic 16,1
+000710 e53b                              ldi puertoD, 0x5B
+                                 			
+000711 3333                          cpi puertoD,0b0011_0011//3
+000712 9100 005f                     lds config, 0x5F
+000714 9981                          sbic 16,1
+000715 ec3f                              ldi puertoD, 0xCF
                                  
-                                 ;Asignamos el valor de salida mapeado para los 7 segmentos al registro 18 eso es en todas las etiquetas que empiecen con "CONVIERTE"
-                                 CONVIERTE0:
-00002f e72e                      	LDI r18, 0x7E
-000030 940c 005f                 	jmp Salida
+000716 3334                          cpi puertoD,0b0011_0100//4
+000717 9100 005f                     lds config, 0x5F
+000719 9981                          sbic 16,1
+00071a e636                              ldi puertoD, 0x66
                                  
-                                 CONVIERTE1:
-000032 e320                      	LDI r18, 0x30
-000033 940c 005f                 	jmp Salida
+00071b 3335                          cpi puertoD,0b0011_0101//5
+00071c 9100 005f                     lds config, 0x5F
+00071e 9981                          sbic 16,1
+00071f ee3d                              ldi puertoD, 0xED
                                  
-                                 CONVIERTE2:
-000035 e62d                      	LDI r18, 0x6D
-000036 940c 005f                 	jmp Salida
+000720 3336                          cpi puertoD,0b0011_0110//6
+000721 9100 005f                     lds config, 0x5F
+000723 9981                          sbic 16,1
+000724 e73d                              ldi puertoD, 0x7D
                                  
-                                 CONVIERTE3:
-000038 e729                      	LDI r18, 0x79
-000039 940c 005f                 	jmp Salida
+000725 3337                          cpi puertoD,0b0011_0111//7
+000726 9100 005f                     lds config, 0x5F
+000728 9981                          sbic 16,1
+000729 e837                              ldi puertoD, 0x87
                                  
-                                 CONVIERTE4:
-00003b e323                      	LDI r18, 0x33
-00003c 940c 005f                 	jmp Salida
+00072a 3338                          cpi puertoD,0b0011_1000//8
+00072b 9100 005f                     lds config, 0x5F
+00072d 9981                          sbic 16,1
+00072e e73f                              ldi puertoD, 0x7F
                                  
-                                 CONVIERTE5:
-00003e e52b                      	LDI r18, 0x5B
-00003f 940c 005f                 	jmp Salida
+00072f 3339                          cpi puertoD,0b0011_1001//9
+000730 9100 005f                     lds config, 0x5F
+000732 9981                          sbic 16,1
+000733 ee37                              ldi puertoD, 0xE7
                                  
-                                 CONVIERTE6:
-000041 e12f                      	LDI r18, 0x1F
-000042 940c 005f                 	jmp Salida
+000734 3431                          cpi puertoD,0b0100_0001//A
+000735 9100 005f                     lds config, 0x5F
+000737 9981                          sbic 16,1
+000738 e737                              ldi puertoD, 0x77
                                  
-                                 CONVIERTE7:
-000044 e721                      	LDI r18, 0x71
-000045 940c 005f                 	jmp Salida
+000739 3432                          cpi puertoD,0b0100_0010//B
+00073a 9100 005f                     lds config, 0x5F
+00073c 9981                          sbic 16,1
+00073d ef3c                              ldi puertoD, 0xFC
                                  
-                                 CONVIERTE8:
-000047 e72f                      	LDI r18, 0x7F
-000048 940c 005f                 	jmp Salida
+00073e 3433                          cpi puertoD,0b0100_0011//C
+00073f 9100 005f                     lds config, 0x5F
+000741 9981                          sbic 16,1
+000742 e339                              ldi puertoD, 0x39
                                  
-                                 CONVIERTE9:
-00004a e723                      	LDI r18, 0x73
-00004b 940c 005f                 	jmp Salida
+000743 3434                          cpi puertoD,0b0100_0100//D
+000744 9100 005f                     lds config, 0x5F
+000746 9981                          sbic 16,1
+000747 ed3e                              ldi puertoD, 0xDE
                                  
-                                 CONVIERTE10:
-00004d e727                      	LDI r18, 0x77
-00004e 940c 005f                 	jmp Salida
+000748 3435                          cpi puertoD,0b0100_0101//E
+000749 9100 005f                     lds config, 0x5F
+00074b 9981                          sbic 16,1
+00074c e739                              ldi puertoD, 0x79
                                  
-                                 CONVIERTE11:
-000050 e12f                      	LDI r18, 0x1F
-000051 940c 005f                 	jmp Salida
+00074d 3436                          cpi puertoD,0b0100_0110//F
+00074e 9100 005f                     lds config, 0x5F
+000750 9981                          sbic 16,1
+000751 ef31                              ldi puertoD, 0xF1
                                  
-                                 CONVIERTE12:
-000053 e42e                      	LDI r18, 0x4E
-000054 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE13:
-000056 e32d                      	LDI r18, 0x3D
-000057 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE14:
-000059 e42f                      	LDI r18, 0x4F
-00005a 940c 005f                 	jmp Salida
-                                 
-                                 CONVIERTE15:
-00005c e427                      	LDI r18, 0x47
-00005d 940c 005f                 	jmp Salida
-                                 
-                                 ;Asignamos al portD lo que tenga en el registro 18 y volvemos al ciclo
-                                 Salida:
-00005f 9320 002b                 	STS $002B, r18
+000752 2f13                      	mov puertoB,puertoD
+000753 701f                      	andi puertoB,0x0F
+000754 2f23                      	mov puertoC,puertoD
+000755 9527                      	ror puertoC
+000756 9527                      	ror puertoC
+000757 9527                      	ror puertoC
+000758 9527                      	ror puertoC
+000759 702f                      	andi puertoC,0x0F
+00075a b915                      	out portb,puertoB
+00075b b928                      	out portc,puertoC
+00075c 940e 0502                 	call delay
+00075e 940e 0502                 	call delay
+000760 940e 0502                 	call delay
 
 
 RESOURCE USE INFORMATION
@@ -1125,37 +1152,37 @@ counted separately from r26..r31 here.
 "ATmega328P" register use summary:
 x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  19 r17:   0 r18:  19 r19:   0 r20:   0 
-r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
+r13:   0 r14:   0 r15:   0 r16:  28 r17:   3 r18:   7 r19:  36 r20:   0 
+r21:   2 r22:   2 r23:   2 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:   0 r31:   0 
-Registers used: 2 out of 35 (5.7%)
+Registers used: 7 out of 35 (20.0%)
 
 "ATmega328P" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
-andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :  16 
+andi  :   2 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
 brcc  :   0 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   0 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
+brne  :   3 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
+brvs  :   0 bset  :   0 bst   :   0 call  :   3 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :  16 cpse  :   0 dec   :   0 eor   :   0 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 jmp   :  20 
-ld    :   0 ldd   :   0 ldi   :  18 lds   :   1 lpm   :   0 lsl   :   0 
-lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   0 pop   :   0 
-push  :   0 rcall :   0 ret   :   0 reti  :   0 rjmp  :   0 rol   :   0 
-ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 sbis  :   1 
+cpi   :  16 cpse  :   0 dec   :   3 eor   :   0 fmul  :   0 fmuls :   0 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 jmp   :   4 
+ld    :   0 ldd   :   0 ldi   :  24 lds   :  17 lpm   :   0 lsl   :   0 
+lsr   :   0 mov   :   3 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
+neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   4 pop   :   0 
+push  :   0 rcall :   0 ret   :   1 reti  :   1 rjmp  :   0 rol   :   0 
+ror   :   4 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :  16 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
-sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
-sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   3 
+sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
+sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   4 
 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 7 out of 113 (6.2%)
+Instructions used: 16 out of 113 (14.2%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0000c6    198      0    198   32768   0.6%
+[.cseg] 0x000000 0x000ec6    268      0    268   32768   0.8%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 
